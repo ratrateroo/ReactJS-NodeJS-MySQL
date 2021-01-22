@@ -25,16 +25,78 @@ const App = () => {
 			})
 			.then((result) => {
 				console.log(result.data);
+				console.log(messages);
+				setMessages([
+					...messages,
+					{
+						username: result.data.username,
+						message: result.data.message,
+					},
+				]);
+				console.log(messages);
 			});
 		console.log('Cliked Submit');
 	};
 
+	// const getMessages = () => {
+	// 	axios.get('http://localhost:3002/messages').then((result) => {
+	// 		console.log('UseEffect', result.data);
+	// 		setState((prevState) => ({
+	// 			...prevState,
+	// 			result: result.data,
+	// 		}));
+	// 		// setMessages([
+	// 		// 	{
+	// 		// 		username: result.data.username,
+	// 		// 		message: result.data.message,
+	// 		// 	},
+	// 		// ]);
+	// 		console.log('getMessages', messages);
+	// 	});
+	// };
+
 	useEffect(() => {
-		axios.get('http://localhost:3002/messages').then((result) => {
-			console.log(result);
-			setMessages(result.data);
-		});
+		// const fetchData = axios
+		// 	.get('http://localhost:3002/messages')
+
+		// 	.then((result) => {
+		// 		console.log('UseEffect', result.data);
+
+		// 		setMessages([
+		// 			{
+		// 				username: result.data.username,
+		// 				message: result.data.message,
+		// 			},
+		// 		]);
+		// 		console.log('getMessages', messages);
+		// 	});
+
+		const getMessages = async () => {
+			try {
+				const result = await axios
+					.get('http://localhost:3002/messages')
+					.then((result) => {
+						console.log('UseEffect', result.data);
+
+						console.log(result);
+
+						setMessages([
+							...messages,
+							{
+								username: result.data.username,
+								message: result.data.usermessage,
+							},
+						]);
+					});
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		getMessages();
+
+		// call the async fetchData function
 	}, []);
+
 	return (
 		<React.Fragment>
 			<div>
@@ -59,7 +121,7 @@ const App = () => {
 					return (
 						<div key={Math.random()}>
 							<h3>Username: {value.username}</h3>
-							<p>Message:{value.usermessage}</p>
+							<p>Message:{value.message}</p>
 						</div>
 					);
 				})}

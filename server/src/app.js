@@ -34,7 +34,7 @@ app.get('/messages', (req, res) => {
 	const sqlInsert = 'SELECT * FROM usermessages ';
 
 	db.query(sqlInsert, (error, result) => {
-		console.log(result);
+		console.log('Query', result);
 		res.send(result);
 	});
 });
