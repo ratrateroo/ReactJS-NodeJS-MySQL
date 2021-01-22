@@ -5,6 +5,7 @@ import axios from 'axios';
 const App = () => {
 	const [username, setUsername] = useState();
 	const [message, setMessage] = useState();
+	const [messages, setMessages] = useState([]);
 
 	const onUsernameInputHandler = (event) => {
 		const username = event.target.value;
@@ -23,24 +24,47 @@ const App = () => {
 				message: message,
 			})
 			.then((result) => {
-				console.log(result);
+				console.log(result.data);
 			});
 		console.log('Cliked Submit');
 	};
+
+	useEffect(() => {
+		axios.get('http://localhost:3002/messages').then((result) => {
+			console.log(result);
+			setMessages(result.data);
+		});
+	}, []);
 	return (
-		<div>
-			<form onSubmit={submitHandler}>
-				<label htmlFor="name">Name:</label>
-				<input type="text" name="text" onChange={onUsernameInputHandler} />
-				<label htmlFor="name">Message:</label>
-				<input
-					type="text"
-					name="message"
-					onChange={onMessageInputHandler}
-				/>
-				<button type="submit">Submit</button>
-			</form>
-		</div>
+		<React.Fragment>
+			<div>
+				<form onSubmit={submitHandler}>
+					<label htmlFor="name">Name:</label>
+					<input
+						type="text"
+						name="text"
+						onChange={onUsernameInputHandler}
+					/>
+					<label htmlFor="name">Message:</label>
+					<input
+						type="text"
+						name="message"
+						onChange={onMessageInputHandler}
+					/>
+					<button type="submit">Submit</button>
+				</form>
+			</div>
+			<div>
+				{messages.map((value) => {
+					return (
+						<div key={Math.random()}>
+							<h3>Username: {value.username}</h3>
+							<p>Message:{value.usermessage}</p>
+						</div>
+					);
+				})}
+			</div>
+		</React.Fragment>
 	);
 };
 

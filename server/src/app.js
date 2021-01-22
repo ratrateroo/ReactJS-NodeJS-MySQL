@@ -30,6 +30,15 @@ app.use(bodyparser.urlencoded({ extended: true }));
 // });
 //});
 
+app.get('/messages', (req, res) => {
+	const sqlInsert = 'SELECT * FROM usermessages ';
+
+	db.query(sqlInsert, (error, result) => {
+		console.log(result);
+		res.send(result);
+	});
+});
+
 app.post('/api/insert', (req, res) => {
 	console.log(req);
 	const username = req.body.username;
