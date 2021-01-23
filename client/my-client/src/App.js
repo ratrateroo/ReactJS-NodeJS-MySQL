@@ -5,7 +5,13 @@ import axios from 'axios';
 const App = () => {
 	const [username, setUsername] = useState();
 	const [message, setMessage] = useState();
-	const [messages, setMessages] = useState([]);
+	const [messages, setMessages] = useState([
+		{
+			id: Math.random(),
+			username: 'user1',
+			message: 'my message',
+		},
+	]);
 
 	const onUsernameInputHandler = (event) => {
 		const username = event.target.value;
@@ -38,64 +44,20 @@ const App = () => {
 		console.log('Cliked Submit');
 	};
 
-	// const getMessages = () => {
-	// 	axios.get('http://localhost:3002/messages').then((result) => {
-	// 		console.log('UseEffect', result.data);
-	// 		setState((prevState) => ({
-	// 			...prevState,
-	// 			result: result.data,
-	// 		}));
-	// 		// setMessages([
-	// 		// 	{
-	// 		// 		username: result.data.username,
-	// 		// 		message: result.data.message,
-	// 		// 	},
-	// 		// ]);
-	// 		console.log('getMessages', messages);
-	// 	});
-	// };
-
 	useEffect(() => {
-		// const fetchData = axios
-		// 	.get('http://localhost:3002/messages')
+		axios
+			.get('http://localhost:3002/messages')
+			.then((result) => {
+				const data = result.data;
 
-		// 	.then((result) => {
-		// 		console.log('UseEffect', result.data);
-
-		// 		setMessages([
-		// 			{
-		// 				username: result.data.username,
-		// 				message: result.data.message,
-		// 			},
-		// 		]);
-		// 		console.log('getMessages', messages);
-		// 	});
-
-		const getMessages = async () => {
-			try {
-				const result = await axios
-					.get('http://localhost:3002/messages')
-					.then((result) => {
-						console.log('UseEffect', result.data);
-
-						console.log(result);
-
-						setMessages([
-							...messages,
-							{
-								username: result.data.username,
-								message: result.data.usermessage,
-							},
-						]);
-					});
-			} catch (error) {
+				setMessages((messages) => [...messages, ...data]);
+			})
+			.catch((error) => {
 				console.log(error);
-			}
-		};
-		getMessages();
-
-		// call the async fetchData function
+			});
 	}, []);
+
+	console.log('Messages', messages);
 
 	return (
 		<React.Fragment>
