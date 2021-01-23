@@ -68,6 +68,21 @@ app.post('/api/insert', (req, res) => {
 	});
 });
 
+app.put('/api/update', (req, res) => {
+	const id = req.body.id;
+	const message = req.body.message;
+
+	const sqlUpdate = 'UPDATE usermessages SET usermessage = ? WHERE  id = ?';
+	console.log('Request update item with ID: ', id);
+	db.query(sqlUpdate, [message, id], (error, result) => {
+		if (error) {
+			console.log(error);
+		}
+		console.log(result);
+		res.send(result);
+	});
+});
+
 app.delete('/api/delete', (req, res) => {
 	const id = req.body.id;
 
