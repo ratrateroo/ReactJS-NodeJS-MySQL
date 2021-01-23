@@ -5,13 +5,7 @@ import axios from 'axios';
 const App = () => {
 	const [username, setUsername] = useState();
 	const [message, setMessage] = useState();
-	const [messages, setMessages] = useState([
-		{
-			id: Math.random(),
-			username: 'user1',
-			message: 'my message',
-		},
-	]);
+	const [messages, setMessages] = useState([]);
 
 	const onUsernameInputHandler = (event) => {
 		const username = event.target.value;
@@ -35,13 +29,32 @@ const App = () => {
 				setMessages([
 					...messages,
 					{
+						id: result.data.id,
 						username: result.data.username,
-						message: result.data.message,
+						usermessage: result.data.usermessage,
 					},
 				]);
 				console.log(messages);
 			});
 		console.log('Cliked Submit');
+	};
+
+	const deleteMessageHandler = (id) => {
+		console.log('Request delete ID: ', id);
+		axios
+			.delete('http://localhost:3002/api/delete', { data: { id: id } })
+			.then((result) => {
+				console.log(result.data);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+
+		setMessages((prevMessages) => {
+			return prevMessages.filter((message) => {
+				return message.id !== id;
+			});
+		});
 	};
 
 	useEffect(() => {
@@ -83,7 +96,13 @@ const App = () => {
 					return (
 						<div key={Math.random()}>
 							<h3>Username: {value.username}</h3>
-							<p>Message:{value.message}</p>
+							<p>Message:{value.usermessage}</p>
+							<button
+								onClick={() => {
+									deleteMessageHandler(value.id);
+								}}>
+								Delete {value.id}
+							</button>
 						</div>
 					);
 				})}
