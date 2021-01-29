@@ -50,6 +50,12 @@ app.get('/messages', (req, res) => {
 	});
 });
 
+app.get('/request', (req, res) => {
+	console.log(req);
+
+	res.send({ message: 'Request Received.' });
+});
+
 app.post('/api/insert', (req, res) => {
 	//console.log(req);
 	const username = req.body.username;
