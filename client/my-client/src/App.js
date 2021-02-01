@@ -2,6 +2,12 @@ import React, { useState, useEffect, createRef } from 'react';
 
 import axios from 'axios';
 
+const request = require('request');
+const OAuth = require('oauth-1.0a');
+const crypto = require('crypto');
+
+// Initialize
+
 const App = () => {
 	const [username, setUsername] = useState('');
 	const [message, setMessage] = useState('');
@@ -113,11 +119,56 @@ const App = () => {
 	const onClickHandler = () => {
 		const url = 'http://localhost/storehouse/wp-json/wc/v3/products';
 
-		const access_token = 'ck_4d20b595462f110d6f21ec3d651e2fc6658d206d';
+		const consumer_key = 'ck_c537326e36602fb5c59174e2b06390242bde4362';
+
+		const consumer_secret = 'cs_9fec25e487fcb3651b545adf122d28f956de2a65';
+
+		const oauth = OAuth({
+			consumer: {
+				key: 'ck_c537326e36602fb5c59174e2b06390242bde4362',
+				secret: 'cs_9fec25e487fcb3651b545adf122d28f956de2a65',
+			},
+			signature_method: 'HMAC-SHA1',
+			hash_function(base_string, key) {
+				return crypto
+					.createHmac('sha1', key)
+					.update(base_string)
+					.digest('base64');
+			},
+		});
+
+		// const request_data = {
+		// 	url:
+		// 		'https://api.twitter.com/1/statuses/update.json?include_entities=true',
+		// 	method: 'POST',
+		// 	data: { status: 'Hello Ladies + Gentlemen, a signed OAuth request!' },
+		// };
+		const request_data = {
+			url: url,
+			method: 'GET',
+			// data: { status: 'Hello Ladies + Gentlemen, a signed OAuth request!' },
+		};
+		const token = {
+			key: 'ck_c537326e36602fb5c59174e2b06390242bde4362',
+			secret: 'cs_9fec25e487fcb3651b545adf122d28f956de2a65',
+		};
+		// request(
+		// 	{
+		// 		url: request_data.url,
+		// 		method: request_data.method,
+		// 		form: oauth.authorize(request_data, token),
+		// 	},
+		// 	function (error, response, body) {
+		// 		console.log(error);
+		// 		console.log(response);
+		// 		console.log(body);
+		// 	}
+		// );
+
 		axios
 			.get('http://localhost/storehouse/wp-json/wc/v3/products', {
 				headers: {
-					Authorization: `token ${access_token}`,
+					headers: oauth.toHeader(oauth.authorize(request_data, token)),
 				},
 			})
 			.then((res) => {
@@ -126,6 +177,15 @@ const App = () => {
 			.catch((error) => {
 				console.error(error);
 			});
+
+		// fetch(url, {
+		// 	method: 'GET',
+		// 	headers: oauth.toHeader(),
+		// })
+		// 	.then((responseJson) => {
+		// 		console.log(responseJson);
+		// 	})
+		// 	.catch((error) => console.log(error));
 
 		// var obj = {
 		// 	method: 'GET',
@@ -177,25 +237,40 @@ const App = () => {
 		// 	function (err, res, body) {}
 		// );
 
-		// fetch(url, {
-		// 	method: 'GET',
-		// 	withCredentials: true,
-		// 	credentials: 'include',
-		// 	headers: {
-		// 		Authorization: bearer,
-		// 		'X-FP-API-KEY': 'iphone', //it can be iPhone or your any other attribute
-		// 		'Content-Type': 'application/json',
-		// 	},
-		// })
-		// 	.then((responseJson) => {
-		// 		var items = JSON.parse(responseJson._bodyInit);
-		// 	})
-		// 	.catch((error) =>
-		// 		this.setState({
-		// 			isLoading: false,
-		// 			message: 'Something bad happened ' + error,
+		// 		fetch(url, {
+		// 			method: 'GET',
+		// 			// withCredentials: true,
+		// 			// credentials: 'include',
+		// 			headers: {
+		// 				// Authorization: bearer,
+		// 				// 'X-FP-API-KEY': 'iphone', //it can be iPhone or your any other attribute
+		// 				// 'Content-Type': 'application/json',
+		// 				Content-Type: application,
+
+		// Authorization: OAuth,
+
+		//   oauth_consumer_key=consumer_key,
+
+		//   oauth_signature_method="HMAC-SHA1",
+
+		//   oauth_callback=[Client Redirect URI],
+
+		//   oauth_timestamp=[Timestamp],
+
+		//   oauth_nonce=[Nonce],
+
+		//   oauth_signature=[Signature]
+		// 			},
 		// 		})
-		// 	);
+		// 			.then((responseJson) => {
+		// 				var items = JSON.parse(responseJson._bodyInit);
+		// 			})
+		// 			.catch((error) =>
+		// 				this.setState({
+		// 					isLoading: false,
+		// 					message: 'Something bad happened ' + error,
+		// 				})
+		// 			);
 	};
 	return (
 		<React.Fragment>
