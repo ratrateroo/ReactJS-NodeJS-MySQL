@@ -119,14 +119,16 @@ const App = () => {
 	const onClickHandler = () => {
 		const url = 'http://localhost/storehouse/wp-json/wc/v3/products';
 
-		const consumer_key = 'ck_c537326e36602fb5c59174e2b06390242bde4362';
+		//const consumer_key = 'ck_c537326e36602fb5c59174e2b06390242bde4362';
+		const consumer_key = 'ck_4ecc74e1c7484fd0fadf42ce9c6e33a66da4864d';
 
-		const consumer_secret = 'cs_9fec25e487fcb3651b545adf122d28f956de2a65';
+		//const consumer_secret = 'cs_9fec25e487fcb3651b545adf122d28f956de2a65';
+		const consumer_secret = 'cs_b30280ed2058f7f32b7b6cb7259f124508397acd';
 
 		const oauth = OAuth({
 			consumer: {
-				key: 'ck_c537326e36602fb5c59174e2b06390242bde4362',
-				secret: 'cs_9fec25e487fcb3651b545adf122d28f956de2a65',
+				key: consumer_key,
+				secret: consumer_secret,
 			},
 			signature_method: 'HMAC-SHA1',
 			hash_function(base_string, key) {
