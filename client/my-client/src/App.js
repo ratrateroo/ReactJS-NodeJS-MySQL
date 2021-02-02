@@ -2,128 +2,79 @@ import React, { useState, useEffect, createRef } from 'react';
 
 import axios from 'axios';
 
-const request = require('request');
-const OAuth = require('oauth-1.0a');
-const crypto = require('crypto');
+// const request = require('request');
+// const OAuth = require('oauth-1.0a');
+// const crypto = require('crypto');
+
+import request from 'request';
+import OAuth from 'oauth-1.0a';
+import crypto from 'crypto';
+import addOAuthInterceptor from 'axios-oauth-1.0a';
 
 // Initialize
-
+const consumer_key = 'ck_4ecc74e1c7484fd0fadf42ce9c6e33a66da4864d';
+const consumer_secret = 'cs_b30280ed2058f7f32b7b6cb7259f124508397acd';
 const App = () => {
-	const [username, setUsername] = useState('');
-	const [message, setMessage] = useState('');
-	const [newmessage, setNewMessage] = useState('');
-	const [messages, setMessages] = useState([]);
+	const onClickHandlerAxios = () => {
+		// Initialize
+		const oauth = OAuth({
+			consumer: {
+				key: consumer_key,
+				secret: consumer_secret,
+			},
+			signature_method: 'HMAC-SHA1',
+			hash_function(base_string, key) {
+				return crypto
+					.createHmac('sha1', key)
+					.update(base_string)
+					.digest('base64');
+			},
+		});
 
-	// let textInput = React.createRef();
+		const request_data = {
+			url: 'http://localhost/storehouse/wp-json/wc/v3/products',
+			method: 'GET',
+			// data: { status: 'Hello Ladies + Gentlemen, a signed OAuth request!' },
+		};
 
-	// const onUsernameInputHandler = (event) => {
-	// 	const username = event.target.value;
-	// 	setUsername(username);
-	// };
-	// const onMessageInputHandler = (event) => {
-	// 	const message = event.target.value;
-	// 	setMessage(message);
-	// };
+		// Note: The token is optional for some requests
+		const token = {
+			key: consumer_key,
+			secret: consumer_secret,
+		};
 
-	// const onNewMessageInputHandler = (event) => {
-	// 	setNewMessage(event.target.value);
-	// };
+		// request(
+		// 	{
+		// 		url: request_data.url,
+		// 		method: request_data.method,
 
-	// const submitHandler = (event) => {
-	// 	event.preventDefault();
-	// 	console.log(username, message);
-	// 	axios
-	// 		.post('http://localhost:3002/api/insert', {
-	// 			username: username,
-	// 			message: message,
-	// 		})
-	// 		.then((result) => {
-	// 			console.log(result.data);
-	// 			console.log(messages);
-	// 			setMessages([
-	// 				...messages,
-	// 				{
-	// 					id: result.data.id,
-	// 					username: result.data.username,
-	// 					usermessage: result.data.usermessage,
-	// 				},
-	// 			]);
-	// 			console.log(messages);
-	// 		});
-	// 	console.log('Cliked Submit');
-	// };
+		// 		headers: oauth.toHeader(oauth.authorize(request_data)),
+		// 	},
+		// 	function (error, response, body) {
+		// 		// Process your data here
+		// 		console.log(response);
+		// 	}
+		// );
 
-	// const deleteMessageHandler = (id) => {
-	// 	console.log('Request delete ID: ', id);
-	// 	axios
-	// 		.delete('http://localhost:3002/api/delete', { data: { id: id } })
-	// 		.then((result) => {
-	// 			console.log(result.data);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.log(error);
-	// 		});
+		fetch('http://localhost/storehouse/wp-json/wc/v3/products', {
+			method: request_data.method,
 
-	// 	setMessages((prevMessages) => {
-	// 		return prevMessages.filter((message) => {
-	// 			return message.id !== id;
-	// 		});
-	// 	});
-	// };
+			headers: oauth.toHeader(oauth.authorize(request_data)),
+		})
+			.then((result) => {
+				return result.json();
+			})
+			.then((data) => {
+				console.log(data);
+			});
+	};
 
-	// const updateMessageHandler = (id) => {
-	// 	console.log('New Message: ', newmessage);
-	// 	console.log('Request update ID: ', id);
-	// 	axios
-	// 		.put('http://localhost:3002/api/update', {
-	// 			id: id,
-	// 			message: newmessage,
-	// 		})
-	// 		.then((result) => {
-	// 			// console.log('Update Result: ', result);
-	// 			setMessages((prevMessages) => {
-	// 				console.log('PrevMessages ', prevMessages);
-	// 				const arr = prevMessages.map((message) => {
-	// 					if (message.id === id) {
-	// 						return {
-	// 							id: message.id,
-	// 							username: message.username,
-	// 							usermessage: newmessage,
-	// 						};
-	// 					}
-	// 					return message;
-	// 				});
-	// 				//console.log('Returned: ', arr);
-	// 				return [...arr];
-	// 			});
-	// 		})
-	// 		.catch((error) => {
-	// 			console.log(error);
-	// 		});
-	// };
-
-	// useEffect(() => {
-	// 	axios
-	// 		.get('http://localhost:3002/messages')
-	// 		.then((result) => {
-	// 			const data = result.data;
-
-	// 			setMessages((messages) => [...messages, ...data]);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.log(error);
-	// 		});
-	// }, []);
-
-	// console.log('Messages', messages);
 	const onClickHandler = () => {
 		const url = 'http://localhost/storehouse/wp-json/wc/v3/products';
 
 		//const consumer_key = 'ck_c537326e36602fb5c59174e2b06390242bde4362';
-		const consumer_key = 'ck_4ecc74e1c7484fd0fadf42ce9c6e33a66da4864d';
 
 		//const consumer_secret = 'cs_9fec25e487fcb3651b545adf122d28f956de2a65';
-		const consumer_secret = 'cs_b30280ed2058f7f32b7b6cb7259f124508397acd';
 
 		const oauth = OAuth({
 			consumer: {
@@ -278,6 +229,10 @@ const App = () => {
 		<React.Fragment>
 			<button type="button" onClick={onClickHandler}>
 				Request
+			</button>
+
+			<button type="button" onClick={onClickHandlerAxios}>
+				Request Axios
 			</button>
 			{/* <div>
 				<form onSubmit={submitHandler}>
