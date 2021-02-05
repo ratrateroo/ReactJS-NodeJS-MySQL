@@ -56,6 +56,47 @@ const App = () => {
 			});
 	};
 
+	const onClickHandlerFetch = () => {
+		// Initialize
+		const oauth = OAuth({
+			consumer: {
+				key: consumer_key,
+				secret: consumer_secret,
+			},
+			signature_method: 'HMAC-SHA1',
+			hash_function(base_string, key) {
+				return crypto
+					.createHmac('sha1', key)
+					.update(base_string)
+					.digest('base64');
+			},
+		});
+
+		const request_data = {
+			url: 'http://localhost/storehouse/wp-json/wc/v3/products/categories',
+			method: 'GET',
+			// data: { status: 'Hello Ladies + Gentlemen, a signed OAuth request!' },
+		};
+
+		// Note: The token is optional for some requests
+		const token = {
+			key: consumer_key,
+			secret: consumer_secret,
+		};
+
+		fetch('http://localhost/storehouse/wp-json/wc/v3/products/categories', {
+			method: request_data.method,
+
+			headers: oauth.toHeader(oauth.authorize(request_data)),
+		})
+			.then((result) => {
+				return result.json();
+			})
+			.then((data) => {
+				console.log(data);
+			});
+	};
+
 	const onClickHandler = () => {
 		const url = 'http://localhost/storehouse/wp-json/wc/v3/products';
 
@@ -108,6 +149,10 @@ const App = () => {
 
 			<button type="button" onClick={onClickHandlerAxios}>
 				Request Axios
+			</button>
+
+			<button type="button" onClick={onClickHandlerFetch}>
+				Request Fetch
 			</button>
 			{/* <div>
 				<form onSubmit={submitHandler}>
