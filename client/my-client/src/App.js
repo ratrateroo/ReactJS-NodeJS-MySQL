@@ -43,22 +43,30 @@ const App = () => {
 			secret: consumer_secret,
 		};
 
-		fetch('http://localhost/storehouse/wp-json/wc/v3/products/categories', {
-			method: request_data.method,
+		// fetch('http://localhost/storehouse/wp-json/wc/v3/products/categories', {
+		// 	method: request_data.method,
 
-			headers: oauth.toHeader(oauth.authorize(request_data)),
-		})
+		// 	headers: oauth.toHeader(oauth.authorize(request_data)),
+		// })
+		// 	.then((result) => {
+		// 		return result.json();
+		// 	})
+		// 	.then((data) => {
+		// 		console.log(data);
+		// 	});
+		axios
+			.get({
+				url:
+					'http://localhost/storehouse/wp-json/wc/v3/products/categories',
+				method: 'GET',
+				headers: oauth.toHeader(oauth.authorize(request_data)),
+			})
 			.then((result) => {
 				return result.json();
 			})
 			.then((data) => {
 				console.log(data);
 			});
-			axios.get(
-				'http://localhost/storehouse/wp-json/wc/v3/products/categories', config :{oauth.toHeader(oauth.authorize(request_data)
-
-				}
-			);
 	};
 
 	const onClickHandlerFetch = () => {
