@@ -54,6 +54,11 @@ const App = () => {
 			.then((data) => {
 				console.log(data);
 			});
+			axios.get(
+				'http://localhost/storehouse/wp-json/wc/v3/products/categories', config :{oauth.toHeader(oauth.authorize(request_data)
+
+				}
+			);
 	};
 
 	const onClickHandlerFetch = () => {
