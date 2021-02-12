@@ -113,10 +113,6 @@ const App = () => {
 	const onClickHandler = () => {
 		const url = 'http://localhost/storehouse/wp-json/wc/v3/products';
 
-		//const consumer_key = 'ck_c537326e36602fb5c59174e2b06390242bde4362';
-
-		//const consumer_secret = 'cs_9fec25e487fcb3651b545adf122d28f956de2a65';
-
 		const oauth = OAuth({
 			consumer: {
 				key: consumer_key,
@@ -167,63 +163,6 @@ const App = () => {
 			<button type="button" onClick={onClickHandlerFetch}>
 				Request Fetch
 			</button>
-			{/* <div>
-				<form onSubmit={submitHandler}>
-					<label htmlFor="name">Name:</label>
-					<input
-						type="text"
-						name="text"
-						onChange={onUsernameInputHandler}
-					/>
-					<label htmlFor="name">Message:</label>
-					<input
-						type="text"
-						name="message"
-						onChange={onMessageInputHandler}
-					/>
-					<button type="submit">Submit</button>
-				</form>
-			</div>
-			<div>
-				{messages.map((value) => {
-					return (
-						<div>
-							<h3>Username: {value.username}</h3>
-							<p>Message:{value.usermessage}</p>
-							<button
-								onClick={() => {
-									deleteMessageHandler(value.id);
-								}}>
-								Delete {value.id}
-							</button>
-							<input
-								type="text"
-								name="newmessage"
-								// onChange={onNewMessageInputHandler}
-								// value={newmessage}
-								// onChange={(e) => {
-								// 	onNewMessageInputHandler(e, value.id);
-								// }}
-								// onChange={onNewMessageInputHandler.bind(
-								// 	this,
-								// 	value.id
-								// )}
-
-								// onChange={}
-								ref={textInput}
-								onChange={onNewMessageInputHandler}
-							/>
-
-							<button
-								onClick={() => {
-									updateMessageHandler(value.id);
-								}}>
-								Update {value.id}
-							</button>
-						</div>
-					);
-				})}
-			</div> */}
 		</React.Fragment>
 	);
 };
