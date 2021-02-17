@@ -43,17 +43,6 @@ const App = () => {
 			secret: consumer_secret,
 		};
 
-		// fetch('http://localhost/storehouse/wp-json/wc/v3/products/categories', {
-		// 	method: request_data.method,
-
-		// 	headers: oauth.toHeader(oauth.authorize(request_data)),
-		// })
-		// 	.then((result) => {
-		// 		return result.json();
-		// 	})
-		// 	.then((data) => {
-		// 		console.log(data);
-		// 	});
 		axios
 			.get({
 				url:
@@ -130,7 +119,6 @@ const App = () => {
 		const request_data = {
 			url: url,
 			method: 'GET',
-			// data: { status: 'Hello Ladies + Gentlemen, a signed OAuth request!' },
 		};
 		const token = {
 			key: 'ck_c537326e36602fb5c59174e2b06390242bde4362',
